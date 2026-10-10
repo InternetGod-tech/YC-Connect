@@ -1,0 +1,11 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "Bootstrap platforms", "type": "shell", "command": "powershell -ExecutionPolicy Bypass -File .\\tools\\bootstrap.ps1", "problemMatcher": [] },
+    { "label": "Run tests", "type": "shell", "command": "flutter test", "problemMatcher": [] },
+    { "label": "Analyze", "type": "shell", "command": "flutter analyze", "problemMatcher": [] },
+    { "label": "Run on Windows", "type": "shell", "command": "flutter run -d windows", "problemMatcher": [] },
+    { "label": "Build Windows release", "type": "shell", "command": "flutter build windows --release", "problemMatcher": [] },
+    { "label": "Build Android APK", "type": "shell", "command": "flutter build apk --release", "problemMatcher": [] }
+  ]
+}

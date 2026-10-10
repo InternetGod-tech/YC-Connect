@@ -1,0 +1,43 @@
+name: youthcare_connect
+description: YouthCare Connect - Youth Health Referral & Continuity Platform (PROJECT-CORE, MYTHOSPRIME).
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  path: ^1.9.0
+  path_provider: ^2.1.4
+  shared_preferences: ^2.3.2
+  sqlite3: ^2.4.6
+  sqlite3_flutter_libs: ^0.5.24
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/brand/
+    - assets/data/
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/brand/app_icon.png
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: assets/brand/app_icon_fg.png
+  remove_alpha_ios: true
+  windows:
+    generate: true
+    image_path: assets/brand/app_icon.png
+    icon_size: 256
+  macos:
+    generate: true
+    image_path: assets/brand/app_icon.png

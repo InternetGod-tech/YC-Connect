@@ -1,0 +1,37 @@
+{
+  "_readme": "Edit this file to load your verified service directory. status: draft | pending | verified | unavailable. Only set 'verified' after the provider has confirmed the details. The file is read when the database is first created or reset.",
+  "categories": [
+    "Mental health & counselling",
+    "Sexual & reproductive health",
+    "Substance use support",
+    "General health & nutrition",
+    "Safety & protection support"
+  ],
+  "facilities": [
+    {"id": "F1", "name": "Eastern Districts Youth Clinic", "province": "Manicaland", "district": "Mutare", "reviewed_days_ago": 20},
+    {"id": "F2", "name": "Sakubva Community Polyclinic", "province": "Manicaland", "district": "Mutare", "reviewed_days_ago": 30},
+    {"id": "F3", "name": "Harare Youth Counselling Centre", "province": "Harare", "district": "Harare", "reviewed_days_ago": 10},
+    {"id": "F4", "name": "Mbare Community Health Hub", "province": "Harare", "district": "Harare", "reviewed_days_ago": 400},
+    {"id": "F5", "name": "Bulawayo Family Support Office", "province": "Bulawayo", "district": "Bulawayo", "reviewed_days_ago": 45}
+  ],
+  "services": [
+    {"id": "S1", "facility": "F1", "category": "Sexual & reproductive health", "eligibility": "Ages 10-24, confidential", "availability": "Weekdays 8:00-16:00", "status": "pending"},
+    {"id": "S2", "facility": "F2", "category": "Sexual & reproductive health", "eligibility": "Ages 10-24, confidential", "availability": "Mon, Wed, Fri", "status": "pending"},
+    {"id": "S3", "facility": "F2", "category": "Mental health & counselling", "eligibility": "Ages 12-24", "availability": "Tue and Thu", "status": "pending"},
+    {"id": "S4", "facility": "F3", "category": "Mental health & counselling", "eligibility": "Ages 12-24", "availability": "Weekdays 9:00-17:00", "status": "pending"},
+    {"id": "S5", "facility": "F3", "category": "Sexual & reproductive health", "eligibility": "Ages 15-24, confidential", "availability": "By appointment", "status": "pending"},
+    {"id": "S6", "facility": "F4", "category": "Mental health & counselling", "eligibility": "Ages 12-24", "availability": "Weekdays", "status": "pending"},
+    {"id": "S7", "facility": "F4", "category": "Substance use support", "eligibility": "Ages 14-24", "availability": "Mon to Thu", "status": "pending"},
+    {"id": "S8", "facility": "F1", "category": "General health & nutrition", "eligibility": "Ages 10-24", "availability": "Weekdays 8:00-16:00", "status": "pending"},
+    {"id": "S9", "facility": "F5", "category": "Safety & protection support", "eligibility": "Ages 10-24, confidential", "availability": "Weekdays 8:00-15:00", "status": "pending"},
+    {"id": "S10", "facility": "F5", "category": "Mental health & counselling", "eligibility": "Ages 12-24", "availability": "Wed and Fri", "status": "pending"},
+    {"id": "S11", "facility": "F2", "category": "General health & nutrition", "eligibility": "Ages 10-24", "availability": "Weekdays", "status": "unavailable"}
+  ],
+  "users": [
+    {"id": "u_youth", "name": "Tendai M.", "role": "youth", "subject_code": "YTH-0001"},
+    {"id": "u_worker", "name": "Community support worker", "role": "worker"},
+    {"id": "u_prov_sak", "name": "Nurse, Sakubva Community Polyclinic", "role": "provider", "facility": "F2"},
+    {"id": "u_prov_hyc", "name": "Counsellor, Harare Youth Counselling Centre", "role": "provider", "facility": "F3"},
+    {"id": "u_admin", "name": "Programme administrator", "role": "admin"}
+  ]
+}

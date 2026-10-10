@@ -1,0 +1,98 @@
+name: build
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+env:
+  FLUTTER_CHANNEL: stable
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable, cache: true }
+      - run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+      - run: flutter create --platforms=windows,linux,macos,android,ios --org zw.mythosprime --project-name youthcare_connect .
+      - run: flutter pub get
+      - run: dart run flutter_launcher_icons
+      - run: python3 tools/brand_platforms.py
+      - run: flutter analyze
+      - run: flutter test --reporter expanded | tee test-results.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: test-results, path: test-results.txt }
+
+  android:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable, cache: true }
+      - run: flutter create --platforms=android --org zw.mythosprime --project-name youthcare_connect .
+      - run: flutter pub get && dart run flutter_launcher_icons && python3 tools/brand_platforms.py
+      - run: flutter build apk --release
+      - uses: actions/upload-artifact@v4
+        with: { name: YouthCareConnect-android-apk, path: build/app/outputs/flutter-apk/app-release.apk }
+
+  windows:
+    needs: test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable, cache: true }
+      - run: flutter create --platforms=windows --org zw.mythosprime --project-name youthcare_connect .
+      - run: flutter pub get; dart run flutter_launcher_icons; python tools/brand_platforms.py
+      - run: flutter build windows --release
+      - run: Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath YouthCareConnect-windows.zip
+      - uses: actions/upload-artifact@v4
+        with: { name: YouthCareConnect-windows, path: YouthCareConnect-windows.zip }
+
+  linux:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable, cache: true }
+      - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libsqlite3-dev
+      - run: flutter create --platforms=linux --org zw.mythosprime --project-name youthcare_connect .
+      - run: flutter pub get && python3 tools/brand_platforms.py
+      - run: flutter build linux --release
+      - run: tar -czf YouthCareConnect-linux.tar.gz -C build/linux/x64/release/bundle .
+      - uses: actions/upload-artifact@v4
+        with: { name: YouthCareConnect-linux, path: YouthCareConnect-linux.tar.gz }
+
+  macos:
+    needs: test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable, cache: true }
+      - run: flutter create --platforms=macos,ios --org zw.mythosprime --project-name youthcare_connect .
+      - run: flutter pub get && dart run flutter_launcher_icons && python3 tools/brand_platforms.py
+      - run: flutter build macos --release
+      - run: ditto -c -k --keepParent "build/macos/Build/Products/Release/YouthCare Connect.app" YouthCareConnect-macos-unsigned.zip
+      - run: flutter build ios --release --no-codesign
+      - uses: actions/upload-artifact@v4
+        with: { name: YouthCareConnect-macos-unsigned, path: YouthCareConnect-macos-unsigned.zip }
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [android, windows, linux, macos]
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: dist, merge-multiple: true }
+      - uses: softprops/action-gh-release@v2
+        with: { files: dist/* }
