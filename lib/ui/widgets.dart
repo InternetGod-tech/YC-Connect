@@ -13,7 +13,7 @@ void snack(BuildContext c, String msg, {bool error = false}) {
     content: Text(msg),
     behavior: SnackBarBehavior.floating,
     backgroundColor: error ? Sem.danger(c).bg : null,
-    showCloseButton: true,
+    action: SnackBarAction(label: 'Dismiss', onPressed: () {}),
   ));
 }
 

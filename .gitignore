@@ -6,3 +6,9 @@ pubspec.lock
 *.iml
 .idea/
 test-results.txt
+flutter_*.log
+/android/
+/ios/
+/macos/
+/windows/
+/linux/

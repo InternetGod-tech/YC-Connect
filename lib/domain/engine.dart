@@ -158,15 +158,16 @@ class Engine {
     if (!serviceStatusLabels.containsKey(status)) throw DomainError(400, 'Choose a valid status.');
     if (eligibility.trim().length > 120 || availability.trim().length > 120) throw DomainError(400, 'Keep eligibility and availability under 120 characters.');
     return _tx(() {
-      var sid = id;
-      if (sid == null) {
-        final n = (_db.select("SELECT COUNT(*) n FROM services").first['n'] as int) + 1;
-        sid = 'S$n';
-        while (_db.select('SELECT 1 FROM services WHERE id=?', [sid]).isNotEmpty) {
-          sid = 'S${++n}';
+      final String sid;
+      if (id == null) {
+        var n = (_db.select('SELECT COUNT(*) n FROM services').first['n'] as int) + 1;
+        while (_db.select('SELECT 1 FROM services WHERE id=?', ['S$n']).isNotEmpty) {
+          n++;
         }
+        sid = 'S$n';
         _db.execute('INSERT INTO services VALUES(?,?,?,?,?,?)', [sid, facilityId, category, eligibility.trim(), availability.trim(), status]);
       } else {
+        sid = id;
         _db.execute('UPDATE services SET facility_id=?, category=?, eligibility=?, availability=?, status=? WHERE id=?',
             [facilityId, category, eligibility.trim(), availability.trim(), status, sid]);
       }
