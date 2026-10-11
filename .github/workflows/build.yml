@@ -36,7 +36,7 @@ jobs:
         with: { distribution: temurin, java-version: '17' }
       - uses: subosito/flutter-action@v2
         with: { channel: stable, cache: true }
-      - run: flutter create --platforms=android --org zw.mythosprime --project-name youthcare_connect .
+      - run: flutter create --platforms=windows,linux,macos,android,ios --org zw.mythosprime --project-name youthcare_connect .
       - run: flutter pub get && dart run flutter_launcher_icons && python3 tools/brand_platforms.py
       - run: flutter build apk --release
       - uses: actions/upload-artifact@v4
@@ -49,8 +49,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with: { channel: stable, cache: true }
-      - run: flutter create --platforms=windows --org zw.mythosprime --project-name youthcare_connect .
-      - run: flutter pub get; dart run flutter_launcher_icons; python tools/brand_platforms.py
+      - run: flutter create --platforms=windows,linux,macos,android,ios --org zw.mythosprime --project-name youthcare_connect .
+      - run: flutter pub get
+      - run: dart run flutter_launcher_icons
+      - run: python tools/brand_platforms.py
       - run: flutter build windows --release
       - run: Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath YouthCareConnect-windows.zip
       - uses: actions/upload-artifact@v4
@@ -64,7 +66,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with: { channel: stable, cache: true }
       - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libsqlite3-dev
-      - run: flutter create --platforms=linux --org zw.mythosprime --project-name youthcare_connect .
+      - run: flutter create --platforms=windows,linux,macos,android,ios --org zw.mythosprime --project-name youthcare_connect .
       - run: flutter pub get && python3 tools/brand_platforms.py
       - run: flutter build linux --release
       - run: tar -czf YouthCareConnect-linux.tar.gz -C build/linux/x64/release/bundle .
@@ -78,13 +80,16 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with: { channel: stable, cache: true }
-      - run: flutter create --platforms=macos,ios --org zw.mythosprime --project-name youthcare_connect .
+      - run: flutter create --platforms=windows,linux,macos,android,ios --org zw.mythosprime --project-name youthcare_connect .
       - run: flutter pub get && dart run flutter_launcher_icons && python3 tools/brand_platforms.py
       - run: flutter build macos --release
       - run: ditto -c -k --keepParent "build/macos/Build/Products/Release/YouthCare Connect.app" YouthCareConnect-macos-unsigned.zip
-      - run: flutter build ios --release --no-codesign
       - uses: actions/upload-artifact@v4
         with: { name: YouthCareConnect-macos-unsigned, path: YouthCareConnect-macos-unsigned.zip }
+      - run: flutter build ios --release --no-codesign
+      - run: cd build/ios/iphoneos && zip -qr "$GITHUB_WORKSPACE/YouthCareConnect-ios-unsigned.zip" Runner.app
+      - uses: actions/upload-artifact@v4
+        with: { name: YouthCareConnect-ios-unsigned, path: YouthCareConnect-ios-unsigned.zip }
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
